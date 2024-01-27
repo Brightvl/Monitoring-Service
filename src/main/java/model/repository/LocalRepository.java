@@ -9,7 +9,7 @@ import java.util.Map;
 public class LocalRepository {
     // пользователи
     private Map<String, User> users = new HashMap<>();
-    // показания счетчиков по пользователям
+
     private Map<String, MeterReading> latestReadings = new HashMap<>();
 
     public  Map<String, User> getUsers() {
@@ -18,6 +18,9 @@ public class LocalRepository {
 
     public  Map<String, MeterReading> getLatestReadings() {
         return latestReadings;
+    }
+    static {
+
     }
 
 
