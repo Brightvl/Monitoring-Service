@@ -7,19 +7,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Хранилище данных пользователей
+ * Хранилище пользовательских данных
  */
-public class LocalRepository {
-    // пользователи
+public class LocalRepositoryUserData {
+    /**
+     * Словарь пользователей
+     */
     private Map<String, User> users = new HashMap<>();
-    // последние записи
+    /**
+     * Коллекция последних поданных пользователем данных
+     */
     private Map<String, MeterReading> latestReadings = new HashMap<>();
 
 
 
     //region getters/setters
     public Map<String, User> getUsers() {
-        return users;
+        return new HashMap<>(users);
     }
     public Map<String, MeterReading> getLatestReadings() {
         return latestReadings;

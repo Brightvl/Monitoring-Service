@@ -16,10 +16,10 @@ public class ServiceRepository {
     /**
      * Хранилище данных пользователей
      */
-    private LocalRepository localRepository;
+    private LocalRepositoryUserData localRepository;
 
     public ServiceRepository() {
-        localRepository = new LocalRepository();
+        localRepository = new LocalRepositoryUserData();
     }
 
 
