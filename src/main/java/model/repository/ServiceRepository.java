@@ -32,7 +32,7 @@ public class ServiceRepository {
      */
     public boolean registerUser(String username, String password) {
         try {
-            localRepository.getUsers().put(username, new User(username, password));
+            localRepository.putUsers(username, new User(username, password));
             return true;
         } catch (Exception e) {
             return false;
@@ -87,10 +87,7 @@ public class ServiceRepository {
      */
     public boolean addMeterReadings(MeterReading meterReading) {
         if (localRepository.getUsers().containsKey(tempUser.getUsername())) {
-            // добавляем пользователю показания
-            localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings().add(meterReading);
-            // добавляем показания в последние
-            localRepository.getLatestReadings().put(tempUser.getUsername(), meterReading);
+            localRepository.addMeterReadings(tempUser.getUsername(), meterReading);
             return true;
         }
         return false;
@@ -116,7 +113,7 @@ public class ServiceRepository {
      * @return
      */
     public boolean checkMeterHistory() {
-        return localRepository.getLatestReadings().isEmpty();
+        return localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings().isEmpty();
     }
 
     /**
@@ -153,12 +150,18 @@ public class ServiceRepository {
         tempUser = null;
     }
 
+    /**
+     * Проверка существуют ли показания в последних добавленных
+     * @param username
+     * @return
+     */
     public boolean checkLatestReading(String username) {
         return localRepository.getLatestReadings().containsKey(username);
     }
 
     /**
      * Вернуть запись переданного месяца
+     *
      * @param username
      * @param month
      * @return
@@ -173,6 +176,6 @@ public class ServiceRepository {
                         ", Холодная вода: " + mr.getColdWater();
             }
         }
-        return month+ ": не имеет показаний счетчика" ;
+        return month + ": не имеет показаний счетчика";
     }
 }

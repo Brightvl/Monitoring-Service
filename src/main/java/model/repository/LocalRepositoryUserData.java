@@ -3,6 +3,7 @@ package model.repository;
 import model.meter.MeterReading;
 import model.user.User;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,13 +21,34 @@ public class LocalRepositoryUserData {
     private Map<String, MeterReading> latestReadings = new HashMap<>();
 
 
+    /**
+     * Добавление пользователя в коллекцию
+     * @param username
+     * @param user
+     */
+    public void putUsers(String username, User user) {
+        users.put(username, user);
+    }
+
+    /**
+     * Добавляем показания пользователю
+     * @param username
+     * @param meterReading
+     */
+    public void addMeterReadings(String username, MeterReading meterReading) {
+        // добавляем пользователю показания;
+        users.get(username).getMeterReadings().add(meterReading);
+        // добавляем показания в последние
+        latestReadings.put(username, meterReading);
+    }
 
     //region getters/setters
     public Map<String, User> getUsers() {
         return new HashMap<>(users);
     }
+
     public Map<String, MeterReading> getLatestReadings() {
-        return latestReadings;
+        return new HashMap<>(latestReadings);
     }
     //endregion
 }
