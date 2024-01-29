@@ -1,22 +1,32 @@
 package view;
 
 import model.data.Month;
-import model.log.AuditLog;
 import model.meter.MeterReading;
 import presenter.Presenter;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Консольное отображение
+ */
 public class ConsoleUI implements View {
-    // свойства
+
+    /**
+     * Прзентер приложения
+     */
     private Presenter presenter;
 
-
+    /**
+     * Конструктор класса
+     */
     public ConsoleUI() {
         this.presenter = new Presenter(this);
     }
 
+    /**
+     * Запуск отображения
+     */
     @Override
     public void run() {
         showMenu();
@@ -101,10 +111,11 @@ public class ConsoleUI implements View {
      */
     private void showUserMenu(String username, Scanner scanner) {
         while (true) {
-            System.out.println("1. Отправьте показания счетчика\n" +
+            System.out.println("1. Добавить показания счетчика\n" +
                     "2. Просмотр последнего поданного показания\n" +
                     "3. Просмотр истории подачи показаний\n" +
-                    "4. Выйти");
+                    "4. Просмотр показаний за конкретный месяц\n" +
+                    "5. Выйти");
             String choice = scanner.next();
 
             switch (choice) {
@@ -118,11 +129,34 @@ public class ConsoleUI implements View {
                     viewReadingHistory(username);
                     break;
                 case "4":
+                    viewReadingsForMonth(username,scanner);
+                    break;
+                case "5":
                     exitUserMenu(username);
                     return;
                 default:
                     System.out.println("Неверный выбор. Пожалуйста, попробуйте еще раз.");
             }
+        }
+    }
+
+    /**
+     * Просмотр показаний за конкретный месяц
+     *
+     * @param username
+     * @param scanner
+     */
+    private void viewReadingsForMonth(String username, Scanner scanner) {
+        System.out.println("Введите месяц: ");
+        String month = scanner.next();
+        if (Month.checkMonth(month)) {
+            if (presenter.checkUserExistence(username)) {
+                System.out.println(presenter.showReadingsForMonth(username, month));
+            } else {
+                System.out.println("Неизвестный пользователь");
+            }
+        } else {
+            System.out.println("Неизвестный месяц");
         }
     }
 
@@ -133,7 +167,6 @@ public class ConsoleUI implements View {
      */
     private void exitUserMenu(String username) {
         System.out.println("Выход из системы...");
-        AuditLog.log("Выйти", username);
         presenter.exitUser();
     }
 
@@ -171,7 +204,7 @@ public class ConsoleUI implements View {
                 }
             }
         } else {
-            System.out.println("Неизвестный месяц "+ month);
+            System.out.println("Неизвестный месяц " + month);
         }
     }
 
@@ -203,6 +236,4 @@ public class ConsoleUI implements View {
             System.out.println(presenter.showMeterHistory());
         }
     }
-
-
 }

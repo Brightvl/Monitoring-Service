@@ -5,8 +5,17 @@ import model.user.User;
 
 import java.util.List;
 
+/**
+ * Сервис соединяет Presenter и конкретную бизнес логику классов
+ */
 public class ServiceRepository {
+    /**
+     * Временно сохраняемый пользователь, на время пока находимся в личном кабинете
+     */
     private User tempUser;
+    /**
+     * Хранилище данных пользователей
+     */
     private LocalRepository localRepository;
 
     public ServiceRepository() {
@@ -16,6 +25,7 @@ public class ServiceRepository {
 
     /**
      * Зарегистрировать пользователя
+     *
      * @param username
      * @param password
      * @return
@@ -31,6 +41,7 @@ public class ServiceRepository {
 
     /**
      * Верификация пользователя
+     *
      * @param username
      * @param password
      * @return
@@ -42,7 +53,6 @@ public class ServiceRepository {
             return false;
         }
     }
-
 
 
     /**
@@ -71,6 +81,7 @@ public class ServiceRepository {
 
     /**
      * Добавить показания пользователя
+     *
      * @param meterReading
      * @return
      */
@@ -87,6 +98,7 @@ public class ServiceRepository {
 
     /**
      * Показать последнее добавленное показание
+     *
      * @param username
      * @return
      */
@@ -100,6 +112,7 @@ public class ServiceRepository {
 
     /**
      * Проверка истории показаний
+     *
      * @return
      */
     public boolean checkMeterHistory() {
@@ -108,6 +121,7 @@ public class ServiceRepository {
 
     /**
      * Отобразить историю подачи показаний
+     *
      * @return
      */
     public String showMeterHistory() {
@@ -125,6 +139,7 @@ public class ServiceRepository {
 
     /**
      * Добавляет временного пользователя для работы с ним
+     *
      * @param username
      */
     public void addTempUser(String username) {
@@ -140,5 +155,24 @@ public class ServiceRepository {
 
     public boolean checkLatestReading(String username) {
         return localRepository.getLatestReadings().containsKey(username);
+    }
+
+    /**
+     * Вернуть запись переданного месяца
+     * @param username
+     * @param month
+     * @return
+     */
+    public String getReadingsForMonth(String username, String month) {
+        List<MeterReading> listMR = localRepository.getUsers().get(username).getMeterReadings();
+        for (MeterReading mr : listMR) {
+            if (mr.getMonth().equalsIgnoreCase(month)) {
+                return "Показания в " + month + ": " +
+                        " - Отопление: " + mr.getHeating() +
+                        ", Горячая вода: " + mr.getHotWater() +
+                        ", Холодная вода: " + mr.getColdWater();
+            }
+        }
+        return month+ ": не имеет показаний счетчика" ;
     }
 }

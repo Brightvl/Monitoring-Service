@@ -1,9 +1,24 @@
 package model.meter;
 
+/**
+ * Показания счетчика
+ */
 public class MeterReading {
+    /**
+     * месяц
+     */
     private String month;
+    /**
+     * Отопление
+     */
     private int heating;
+    /**
+     * Горячая вода
+     */
     private int hotWater;
+    /**
+     * Холодная вода
+     */
     private int coldWater;
 
     public MeterReading(String month, int heating, int hotWater, int coldWater) {
@@ -13,6 +28,7 @@ public class MeterReading {
         this.coldWater = coldWater;
     }
 
+    //region get/set
     public String getMonth() {
         return month;
     }
@@ -28,4 +44,5 @@ public class MeterReading {
     public int getColdWater() {
         return coldWater;
     }
+    //endregion
 }

@@ -1,5 +1,8 @@
 package model.data;
 
+/**
+ * Значения месяцев в году
+ */
 public enum Month {
     JANUARY("Январь"),
     FEBRUARY("Февраль"),
@@ -20,19 +23,14 @@ public enum Month {
         this.name = name;
     }
 
-
-    public static Month getByIndex(int index) {
-
-        if (index >= 0 && index < values().length) {
-            return values()[index];
-        }
-        throw new IllegalArgumentException("Недопустимый индекс");
-    }
-
-
-    public static boolean checkMonth(String month) throws IllegalArgumentException {
+    /**
+     * Проверка соответствия переданного месяца
+     * @param month
+     * @return
+     */
+    public static boolean checkMonth(String month) {
         for (Month enumMonth : Month.values()) {
-            if (enumMonth.name.equalsIgnoreCase(month)) {
+            if (enumMonth.name.equalsIgnoreCase(month.trim())) {
                 return true;
             }
         }
