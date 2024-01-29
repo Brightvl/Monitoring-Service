@@ -3,7 +3,6 @@ package model.repository;
 import model.meter.MeterReading;
 import model.user.User;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

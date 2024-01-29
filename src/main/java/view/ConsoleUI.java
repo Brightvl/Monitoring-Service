@@ -189,17 +189,22 @@ public class ConsoleUI implements View {
      * @param username
      */
     public void viewReadingsForMonth(String username) {
-        System.out.println("Введите месяц: ");
-        String month = scanner.next();
-        if (Month.checkMonth(month)) {
-            if (presenter.checkUserExistence(username)) {
-                System.out.println(presenter.showReadingsForMonth(username, month));
+        if (!presenter.checkMeterHistory()) {
+            System.out.println("Введите месяц: ");
+            String month = scanner.next();
+            if (Month.checkMonth(month)) {
+                if (presenter.checkUserExistence(username)) {
+                    System.out.println(presenter.showReadingsForMonth(username, month));
+                } else {
+                    System.out.println("Неизвестный пользователь");
+                }
             } else {
-                System.out.println("Неизвестный пользователь");
+                System.out.println("Неизвестный месяц");
             }
         } else {
-            System.out.println("Неизвестный месяц");
+            System.out.println("История показаний пуста");
         }
+
     }
 
     /**
@@ -209,5 +214,9 @@ public class ConsoleUI implements View {
         System.out.println("Выход из системы...");
         presenter.exitUser();
         showMenu();
+    }
+
+    public void setPresenter(Presenter mockPresenter) {
+        this.presenter = mockPresenter;
     }
 }

@@ -5,6 +5,7 @@ import model.meter.MeterReading;
 import java.util.ArrayList;
 import java.util.List;
 
+//todo 11. Не реализован функционал администратора
 /**
  * Пользователь
  */
