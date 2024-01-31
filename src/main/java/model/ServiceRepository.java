@@ -1,6 +1,7 @@
-package model.repository;
+package model;
 
 import model.meter.MeterReading;
+import model.repository.LocalRepositoryUserData;
 import model.user.Admin;
 import model.user.Client;
 import model.user.User;

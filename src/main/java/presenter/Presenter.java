@@ -1,7 +1,7 @@
 package presenter;
 
 import model.meter.MeterReading;
-import model.repository.ServiceRepository;
+import model.ServiceRepository;
 import view.View;
 
 /**
