@@ -18,6 +18,6 @@ public class ViewReadingHistory implements Command {
 
     @Override
     public void execute() {
-        consoleUI.viewReadingHistory(userName);
+        consoleUI.viewReadingHistory();
     }
 }

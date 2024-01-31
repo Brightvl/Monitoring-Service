@@ -32,6 +32,7 @@ public class ConsoleUI implements View {
     public ConsoleUI() {
         this.presenter = new Presenter(this);
         this.cReader = new ConsoleReader();
+        this.menu = null;
     }
 
     /**
@@ -39,14 +40,14 @@ public class ConsoleUI implements View {
      */
     @Override
     public void run() {
-        showMenu();
+        showMainMenu();
     }
 
     /**
-     * Отображение меню
+     * Пользовательское меню
      */
-    private void showMenu() {
-        menu = new MainMenu(this);
+    private void showMenu(Menu menu) {
+        this.menu = menu;
         while (menu.isRunning()) {
             cReader.println(menu.printMenu());
             String choice = cReader.input("Выберите пункт меню: ");
@@ -56,6 +57,28 @@ public class ConsoleUI implements View {
             }
             menu.execute(Integer.parseInt(choice));
         }
+    }
+
+    /**
+     * Отображение меню
+     */
+    private void showMainMenu() {
+        showMenu(new MainMenu(this));
+    }
+
+    /**
+     * Отображение меню админа
+     * @param username имя
+     */
+    private void showAdminMenu(String username) {
+        showMenu(new AdminMenu(username, this));
+    }
+
+    /**
+     * Пользовательское меню
+     */
+    private void showClientMenu(String username) {
+        showMenu(new UserMenu(username, this));
     }
 
     /**
@@ -94,34 +117,6 @@ public class ConsoleUI implements View {
             System.out.println("Неверные учетные данные. Пожалуйста, попробуйте еще раз.");
         }
     }
-
-    private void showAdminMenu(String username) {
-        showMenu(new AdminMenu(username, this));
-    }
-
-    /**
-     * Пользовательское меню
-     */
-    private void showClientMenu(String username) {
-        showMenu(new UserMenu(username, this));
-    }
-
-    /**
-     * Пользовательское меню
-     */
-    private void showMenu(Menu menu) {
-        this.menu = menu;
-        while (menu.isRunning()) {
-            cReader.println(menu.printMenu());
-            String choice = cReader.input("Выберите пункт меню: ");
-            if (menu.checkInputLineMenu(choice) == -1) {
-                cReader.println("Ошибка ввода");
-                continue;
-            }
-            menu.execute(Integer.parseInt(choice));
-        }
-    }
-
 
     /**
      * Добавить показания счетчика
@@ -169,10 +164,8 @@ public class ConsoleUI implements View {
 
     /**
      * Показать историю сообщений
-     *
-     * @param username имя пользователя
      */
-    public void viewReadingHistory(String username) {
+    public void viewReadingHistory() {
         if (presenter.checkMeterHistory()) {
             System.out.println("Для пользователя нет истории чтения.");
         } else {
@@ -210,6 +203,6 @@ public class ConsoleUI implements View {
     public void exitUserMenu() {
         System.out.println("Выход из системы...");
         presenter.exitUser();
-        showMenu();
+        showMainMenu();
     }
 }
