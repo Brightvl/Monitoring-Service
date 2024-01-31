@@ -1,6 +1,7 @@
 package model.repository;
 
 import model.meter.MeterReading;
+import model.user.Client;
 import model.user.User;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class ServiceRepository {
     /**
      * Временно сохраняемый пользователь, на время пока находимся в личном кабинете
      */
-    private User tempUser;
+    private Client tempUser;
     /**
      * Хранилище данных пользователей
      */
@@ -83,8 +84,7 @@ public class ServiceRepository {
      */
     public boolean addMeterReadings(MeterReading meterReading) {
         if (localRepository.getUsers().containsKey(tempUser.getUsername())) {
-            localRepository.addMeterReadings(tempUser.getUsername(), meterReading);
-            return true;
+            return localRepository.addMeterReadings(tempUser.getUsername(), meterReading);
         }
         return false;
     }
@@ -109,7 +109,10 @@ public class ServiceRepository {
      * @return true если история существует
      */
     public boolean checkMeterHistory() {
-        return localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings().isEmpty();
+        if (tempUser instanceof User && checkUserExistence(tempUser.getUsername())) {
+            return ((User) tempUser).getMeterReadings().isEmpty();
+        }
+        return false;
     }
 
     /**
@@ -118,19 +121,21 @@ public class ServiceRepository {
      * @return строка
      */
     public String showMeterHistory() {
-        List<MeterReading> listMR = localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (MeterReading mr : listMR) {
-            stringBuilder.append(mr.getMonth()).append(" - Отопление: ")
-                    .append(mr.getHeating())
-                    .append(", Горячая вода: ")
-                    .append(mr.getHotWater())
-                    .append(", Холодная вода: ")
-                    .append(mr.getColdWater())
-                    .append("\n");
-        }
-        return stringBuilder.toString();
+        StringBuilder sb = new StringBuilder();
 
+        if (tempUser instanceof User && checkUserExistence(tempUser.getUsername())) {
+            List<MeterReading> listMR = ((User) tempUser).getMeterReadings();
+            for (MeterReading mr : listMR) {
+                sb.append(mr.getMonth()).append(" - Отопление: ")
+                        .append(mr.getHeating())
+                        .append(", Горячая вода: ")
+                        .append(mr.getHotWater())
+                        .append(", Холодная вода: ")
+                        .append(mr.getColdWater())
+                        .append("\n");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -151,6 +156,7 @@ public class ServiceRepository {
 
     /**
      * Проверка существуют ли показания в последних добавленных
+     *
      * @param username имя
      * @return true если существует
      */
@@ -161,18 +167,19 @@ public class ServiceRepository {
     /**
      * Вернуть запись переданного месяца
      *
-     * @param username имя
-     * @param month месяц
+     * @param month    месяц
      * @return строка
      */
-    public String getReadingsForMonth(String username, String month) {
-        List<MeterReading> listMR = localRepository.getUsers().get(username).getMeterReadings();
-        for (MeterReading mr : listMR) {
-            if (mr.getMonth().equalsIgnoreCase(month)) {
-                return "Показания в " + month + ": " +
-                        " - Отопление: " + mr.getHeating() +
-                        ", Горячая вода: " + mr.getHotWater() +
-                        ", Холодная вода: " + mr.getColdWater();
+    public String getReadingsForMonth(String month) {
+        if (tempUser instanceof User && checkUserExistence(tempUser.getUsername())) {
+            List<MeterReading> listMR = ((User) tempUser).getMeterReadings();
+            for (MeterReading mr : listMR) {
+                if (mr.getMonth().equalsIgnoreCase(month)) {
+                    return "Показания в " + month + ": " +
+                            " - Отопление: " + mr.getHeating() +
+                            ", Горячая вода: " + mr.getHotWater() +
+                            ", Холодная вода: " + mr.getColdWater();
+                }
             }
         }
         return month + ": не имеет показаний счетчика";

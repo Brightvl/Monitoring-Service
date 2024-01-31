@@ -177,7 +177,7 @@ public class ConsoleUI implements View {
             String month = cReader.input("Введите месяц: ");
             if (Month.checkMonth(month)) {
                 if (presenter.checkUserExistence(username)) {
-                    System.out.println(presenter.showReadingsForMonth(username, month));
+                    System.out.println(presenter.showReadingsForMonth(month));
                 } else {
                     System.out.println("Неизвестный пользователь");
                 }

@@ -70,12 +70,11 @@ public class Presenter {
     /**
      * Отобразить показания за выбранный месяц
      *
-     * @param username имя
      * @param month месяц
      * @return строка с месяцами
      */
-    public String showReadingsForMonth(String username, String month) {
-        return serviceRepository.getReadingsForMonth(username, month);
+    public String showReadingsForMonth(String month) {
+        return serviceRepository.getReadingsForMonth(month);
     }
 
     /**
