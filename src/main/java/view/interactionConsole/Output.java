@@ -6,7 +6,7 @@ package view.interactionConsole;
 public interface Output {
     /**
      * Вывод данных
-     * @param message
+     * @param message сообщение
      */
     void println(String message);
 }

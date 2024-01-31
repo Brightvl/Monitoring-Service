@@ -26,8 +26,8 @@ public enum Month {
     /**
      * Проверка соответствия переданного месяца
      *
-     * @param month
-     * @return
+     * @param month месяц
+     * @return true если месяц существует
      */
     public static boolean checkMonth(String month) {
         for (Month enumMonth : Month.values()) {

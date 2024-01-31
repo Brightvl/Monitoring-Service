@@ -8,27 +8,35 @@ import java.util.List;
 /**
  * Пользователь
  */
-public class User extends Client{
+public class User extends Client {
 
     /**
      * Данные показаний пользователя
      */
-    private List<MeterReading> meterReadings;
+    private final List<MeterReading> meterReadings;
 
-    /**
-     * Конструктор для пользователя
-     * @param username
-     * @param password
-     */
+
     public User(String username, String password) {
-        super(username,password);
+        super(username, password);
         this.meterReadings = new ArrayList<>();
     }
 
-
-    //region Getters/setters
+    /**
+     * Возвращает копию показаний счетчика
+     *
+     * @return List<MeterReading>
+     */
     public List<MeterReading> getMeterReadings() {
-        return meterReadings;
+        return new ArrayList<>(meterReadings);
     }
-    //endregion
+
+    /**
+     * Добавляет показание пользователю
+     *
+     * @param meterReading показания счетчика
+     */
+    public void addMeterReading(MeterReading meterReading) {
+        meterReadings.add(meterReading);
+    }
+
 }

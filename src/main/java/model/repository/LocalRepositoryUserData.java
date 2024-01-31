@@ -13,17 +13,17 @@ public class LocalRepositoryUserData {
     /**
      * Словарь пользователей
      */
-    private Map<String, User> users = new HashMap<>();
+    private final Map<String, User> users = new HashMap<>();
     /**
      * Коллекция последних поданных пользователем данных
      */
-    private Map<String, MeterReading> latestReadings = new HashMap<>();
+    private final Map<String, MeterReading> latestReadings = new HashMap<>();
 
 
     /**
      * Добавление пользователя в коллекцию
-     * @param username
-     * @param user
+     * @param username имя
+     * @param user пользователь
      */
     public void putUsers(String username, User user) {
         users.put(username, user);
@@ -31,12 +31,12 @@ public class LocalRepositoryUserData {
 
     /**
      * Добавляем показания пользователю
-     * @param username
-     * @param meterReading
+     * @param username имя
+     * @param meterReading пользователь
      */
     public void addMeterReadings(String username, MeterReading meterReading) {
         // добавляем пользователю показания;
-        users.get(username).getMeterReadings().add(meterReading);
+        users.get(username).addMeterReading(meterReading);
         // добавляем показания в последние
         latestReadings.put(username, meterReading);
     }

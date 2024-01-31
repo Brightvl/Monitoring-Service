@@ -1,30 +1,21 @@
 package model.user;
 
+import lombok.Data;
+import lombok.Getter;
+
 /**
  * Класс клиента
  */
+
+@Data
 public abstract class Client {
 
     /**
      * имя
      */
-    private String username;
+    private final String username;
     /**
      * пароль
      */
-    private String password;
-
-    public Client(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    //region Getters/setters
-    public String getUsername() {
-        return username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    //endregion
+    private final String password;
 }

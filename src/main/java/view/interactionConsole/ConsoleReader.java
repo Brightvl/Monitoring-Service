@@ -1,12 +1,18 @@
 package view.interactionConsole;
 
+import lombok.AllArgsConstructor;
+
 import java.util.Scanner;
 
 /**
  * Класс для удобного ввода и вывода в консоль
  */
+
 public class ConsoleReader implements Output, Input {
 
+    /**
+     * Класс для считывания с консоли
+     */
     private final Scanner scanner;
 
     public ConsoleReader() {
