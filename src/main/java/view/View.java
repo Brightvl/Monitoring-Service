@@ -1,5 +1,8 @@
 package view;
 
+/**
+ * Интерфейс для отображения программы
+ */
 public interface View {
 
 

@@ -5,24 +5,34 @@ import model.user.User;
 
 import java.util.List;
 
+/**
+ * Сервис соединяет Presenter и конкретную бизнес логику классов
+ */
 public class ServiceRepository {
+    /**
+     * Временно сохраняемый пользователь, на время пока находимся в личном кабинете
+     */
     private User tempUser;
-    private LocalRepository localRepository;
+    /**
+     * Хранилище данных пользователей
+     */
+    private LocalRepositoryUserData localRepository;
 
     public ServiceRepository() {
-        localRepository = new LocalRepository();
+        localRepository = new LocalRepositoryUserData();
     }
 
 
     /**
      * Зарегистрировать пользователя
+     *
      * @param username
      * @param password
      * @return
      */
     public boolean registerUser(String username, String password) {
         try {
-            localRepository.getUsers().put(username, new User(username, password));
+            localRepository.putUsers(username, new User(username, password));
             return true;
         } catch (Exception e) {
             return false;
@@ -31,6 +41,7 @@ public class ServiceRepository {
 
     /**
      * Верификация пользователя
+     *
      * @param username
      * @param password
      * @return
@@ -42,7 +53,6 @@ public class ServiceRepository {
             return false;
         }
     }
-
 
 
     /**
@@ -71,15 +81,13 @@ public class ServiceRepository {
 
     /**
      * Добавить показания пользователя
+     *
      * @param meterReading
      * @return
      */
     public boolean addMeterReadings(MeterReading meterReading) {
         if (localRepository.getUsers().containsKey(tempUser.getUsername())) {
-            // добавляем пользователю показания
-            localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings().add(meterReading);
-            // добавляем показания в последние
-            localRepository.getLatestReadings().put(tempUser.getUsername(), meterReading);
+            localRepository.addMeterReadings(tempUser.getUsername(), meterReading);
             return true;
         }
         return false;
@@ -87,6 +95,7 @@ public class ServiceRepository {
 
     /**
      * Показать последнее добавленное показание
+     *
      * @param username
      * @return
      */
@@ -100,14 +109,16 @@ public class ServiceRepository {
 
     /**
      * Проверка истории показаний
+     *
      * @return
      */
     public boolean checkMeterHistory() {
-        return localRepository.getLatestReadings().isEmpty();
+        return localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings().isEmpty();
     }
 
     /**
      * Отобразить историю подачи показаний
+     *
      * @return
      */
     public String showMeterHistory() {
@@ -125,6 +136,7 @@ public class ServiceRepository {
 
     /**
      * Добавляет временного пользователя для работы с ним
+     *
      * @param username
      */
     public void addTempUser(String username) {
@@ -138,7 +150,32 @@ public class ServiceRepository {
         tempUser = null;
     }
 
+    /**
+     * Проверка существуют ли показания в последних добавленных
+     * @param username
+     * @return
+     */
     public boolean checkLatestReading(String username) {
         return localRepository.getLatestReadings().containsKey(username);
+    }
+
+    /**
+     * Вернуть запись переданного месяца
+     *
+     * @param username
+     * @param month
+     * @return
+     */
+    public String getReadingsForMonth(String username, String month) {
+        List<MeterReading> listMR = localRepository.getUsers().get(username).getMeterReadings();
+        for (MeterReading mr : listMR) {
+            if (mr.getMonth().equalsIgnoreCase(month)) {
+                return "Показания в " + month + ": " +
+                        " - Отопление: " + mr.getHeating() +
+                        ", Горячая вода: " + mr.getHotWater() +
+                        ", Холодная вода: " + mr.getColdWater();
+            }
+        }
+        return month + ": не имеет показаний счетчика";
     }
 }

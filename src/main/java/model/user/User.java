@@ -5,34 +5,31 @@ import model.meter.MeterReading;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
-    private String username;
-    private String password;
-    private boolean isAdmin;
+//todo 11. Не реализован функционал администратора
+/**
+ * Пользователь
+ */
+public class User extends Client{
+
+    /**
+     * Данные показаний пользователя
+     */
     private List<MeterReading> meterReadings;
 
+    /**
+     * Конструктор для пользователя
+     * @param username
+     * @param password
+     */
     public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+        super(username,password);
         this.meterReadings = new ArrayList<>();
     }
 
-    public User(String username, String password, boolean isAdmin) {
-        this.username = username;
-        this.password = password;
-        this.meterReadings = new ArrayList<>();
-        this.isAdmin = isAdmin;
-    }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
+    //region Getters/setters
     public List<MeterReading> getMeterReadings() {
         return meterReadings;
     }
+    //endregion
 }

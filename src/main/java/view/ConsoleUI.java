@@ -1,22 +1,43 @@
 package view;
 
 import model.data.Month;
-import model.log.AuditLog;
 import model.meter.MeterReading;
 import presenter.Presenter;
+import view.interactionConsole.ConsoleReader;
+import view.menu.Menu;
+import view.menu.typesMenu.MainMenu;
+import view.menu.typesMenu.UserMenu;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Консольное отображение
+ */
 public class ConsoleUI implements View {
-    // свойства
+
+    /**
+     * Прзентер приложения
+     */
     private Presenter presenter;
 
+    private Menu menu;
 
+    private Scanner scanner;
+    private ConsoleReader consoleReader;
+
+    /**
+     * Конструктор класса
+     */
     public ConsoleUI() {
         this.presenter = new Presenter(this);
+        this.scanner = new Scanner(System.in);
+        this.consoleReader = new ConsoleReader();
     }
 
+    /**
+     * Запуск отображения
+     */
     @Override
     public void run() {
         showMenu();
@@ -26,34 +47,22 @@ public class ConsoleUI implements View {
      * Отображение меню
      */
     private void showMenu() {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.println("1. Зарегистрироваться\n2. Войти\n3. Выход");
-            String choice = scanner.next();
-
-            switch (choice) {
-                case "1":
-                    registerUser(scanner);
-                    break;
-                case "2":
-                    loginUser(scanner);
-                    break;
-                case "3":
-                    System.out.println("Выход...");
-                    System.exit(0);
-                default:
-                    System.out.println("Неверный выбор. Пожалуйста, попробуйте еще раз.");
+        menu = new MainMenu(this);
+        while (menu.isRunning()) {
+            consoleReader.println(menu.printMenu());
+            String choice = consoleReader.input("Выберите пункт меню: ");
+            if (menu.checkInputLineMenu(choice) == -1) {
+                consoleReader.println("Ошибка ввода");
+                continue;
             }
+            menu.execute(Integer.parseInt(choice));
         }
     }
 
     /**
      * Регистрация пользователя
-     *
-     * @param scanner
      */
-    private void registerUser(Scanner scanner) {
+    public void registerUser() {
         System.out.print("Введите имя: ");
         String username = scanner.next();
 
@@ -72,21 +81,20 @@ public class ConsoleUI implements View {
 
     /**
      * Залогиниться
-     *
-     * @param scanner
      */
-    private void loginUser(Scanner scanner) {
+    public void loginUser() {
         System.out.print("Введите имя пользователя: ");
         String username = scanner.next();
 
         System.out.print("Введите пароль: ");
         String password = scanner.next();
 
-        if (presenter.checkUserExistence(username) && presenter.tryVerification(username, password)) {
+        if (presenter.checkUserExistence(username)
+                && presenter.tryVerification(username, password)) {
             System.out.println("Авторизация успешна.");
             presenter.addTempUser(username);
             // Выполнение действий
-            showUserMenu(username, scanner);
+            showClientMenu(username);
         } else {
             System.out.println("Неверные учетные данные. Пожалуйста, попробуйте еще раз.");
         }
@@ -95,55 +103,27 @@ public class ConsoleUI implements View {
 
     /**
      * Пользовательское меню
-     *
-     * @param username Имя пользователя
-     * @param scanner
      */
-    private void showUserMenu(String username, Scanner scanner) {
-        while (true) {
-            System.out.println("1. Отправьте показания счетчика\n" +
-                    "2. Просмотр последнего поданного показания\n" +
-                    "3. Просмотр истории подачи показаний\n" +
-                    "4. Выйти");
-            String choice = scanner.next();
-
-            switch (choice) {
-                case "1":
-                    submitMeterReading(username, scanner);
-                    break;
-                case "2":
-                    viewLatestReading(username);
-                    break;
-                case "3":
-                    viewReadingHistory(username);
-                    break;
-                case "4":
-                    exitUserMenu(username);
-                    return;
-                default:
-                    System.out.println("Неверный выбор. Пожалуйста, попробуйте еще раз.");
+    private void showClientMenu(String username) {
+        this.menu = new UserMenu(username, this);
+        while (menu.isRunning()) {
+            consoleReader.println(menu.printMenu());
+            String choice = consoleReader.input("Выберите пункт меню: ");
+            if (menu.checkInputLineMenu(choice) == -1) {
+                consoleReader.println("Ошибка ввода");
+                continue;
             }
+            menu.execute(Integer.parseInt(choice));
         }
     }
 
-    /**
-     * Выход из меню пользователя
-     *
-     * @param username
-     */
-    private void exitUserMenu(String username) {
-        System.out.println("Выход из системы...");
-        AuditLog.log("Выйти", username);
-        presenter.exitUser();
-    }
 
     /**
      * Добавить показания счетчика
      *
      * @param username имя
-     * @param scanner
      */
-    private void submitMeterReading(String username, Scanner scanner) {
+    public void submitMeterReading(String username) {
         System.out.print("Введите месяц: ");
         String month = scanner.next();
         if (Month.checkMonth(month)) {
@@ -171,17 +151,17 @@ public class ConsoleUI implements View {
                 }
             }
         } else {
-            System.out.println("Неизвестный месяц "+ month);
+            System.out.println("Неизвестный месяц " + month);
         }
     }
 
 
     /**
-     * Отобразить последнее добавление показаний
+     * Отобразить последнее добавленное показание
      *
      * @param username
      */
-    private void viewLatestReading(String username) {
+    public void viewLatestReading(String username) {
         if (presenter.checkLatestReading(username)) {
             System.out.println(presenter.showLatestReading(username));
         } else {
@@ -195,7 +175,7 @@ public class ConsoleUI implements View {
      *
      * @param username
      */
-    private void viewReadingHistory(String username) {
+    public void viewReadingHistory(String username) {
         if (presenter.checkMeterHistory()) {
             System.out.println("Для пользователя нет истории чтения.");
         } else {
@@ -204,5 +184,40 @@ public class ConsoleUI implements View {
         }
     }
 
+    /**
+     * Просмотр показаний за конкретный месяц
+     *
+     * @param username
+     */
+    public void viewReadingsForMonth(String username) {
+        if (!presenter.checkMeterHistory()) {
+            System.out.println("Введите месяц: ");
+            String month = scanner.next();
+            if (Month.checkMonth(month)) {
+                if (presenter.checkUserExistence(username)) {
+                    System.out.println(presenter.showReadingsForMonth(username, month));
+                } else {
+                    System.out.println("Неизвестный пользователь");
+                }
+            } else {
+                System.out.println("Неизвестный месяц");
+            }
+        } else {
+            System.out.println("История показаний пуста");
+        }
 
+    }
+
+    /**
+     * Выход из меню пользователя
+     */
+    public void exitUserMenu() {
+        System.out.println("Выход из системы...");
+        presenter.exitUser();
+        showMenu();
+    }
+
+    public void setPresenter(Presenter mockPresenter) {
+        this.presenter = mockPresenter;
+    }
 }
