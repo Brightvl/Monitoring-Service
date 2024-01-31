@@ -94,7 +94,7 @@ public class ConsoleUI implements View {
             System.out.println("Авторизация успешна.");
             presenter.addTempUser(username);
             // Выполнение действий
-            showUserMenu(username);
+            showClientMenu(username);
         } else {
             System.out.println("Неверные учетные данные. Пожалуйста, попробуйте еще раз.");
         }
@@ -104,7 +104,7 @@ public class ConsoleUI implements View {
     /**
      * Пользовательское меню
      */
-    private void showUserMenu(String username) {
+    private void showClientMenu(String username) {
         this.menu = new UserMenu(username, this);
         while (menu.isRunning()) {
             consoleReader.println(menu.printMenu());
@@ -116,6 +116,7 @@ public class ConsoleUI implements View {
             menu.execute(Integer.parseInt(choice));
         }
     }
+
 
     /**
      * Добавить показания счетчика
