@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * Сервис соединяет Presenter и конкретную бизнес логику классов
  */
+
 public class ServiceRepository {
     /**
      * Временно сохраняемый пользователь, на время пока находимся в личном кабинете
@@ -16,7 +17,7 @@ public class ServiceRepository {
     /**
      * Хранилище данных пользователей
      */
-    private LocalRepositoryUserData localRepository;
+    private final LocalRepositoryUserData localRepository;
 
     public ServiceRepository() {
         localRepository = new LocalRepositoryUserData();
@@ -26,9 +27,9 @@ public class ServiceRepository {
     /**
      * Зарегистрировать пользователя
      *
-     * @param username
-     * @param password
-     * @return
+     * @param username имя
+     * @param password пароль
+     * @return true если регистрация успешна
      */
     public boolean registerUser(String username, String password) {
         try {
@@ -42,23 +43,19 @@ public class ServiceRepository {
     /**
      * Верификация пользователя
      *
-     * @param username
-     * @param password
-     * @return
+     * @param username имя
+     * @param password пароль
+     * @return true если верификация успешна
      */
     public boolean tryVerification(String username, String password) {
-        if (localRepository.getUsers().get(username).getPassword().equals(password)) {
-            return true;
-        } else {
-            return false;
-        }
+        return localRepository.getUsers().get(username).getPassword().equals(password);
     }
 
     /**
      * Проверка существования пользователя
      *
-     * @param username
-     * @return
+     * @param username имя
+     * @return возвращает true если пользователь существует
      */
     public boolean checkUserExistence(String username) {
         return localRepository.getUsers().containsKey(username);
@@ -68,7 +65,7 @@ public class ServiceRepository {
      * Проверяет последние добавленные записи
      *
      * @param month месяц
-     * @return
+     * @return true если запись существует
      */
     public boolean checkMonthLatestReading(String month) {
         try {
@@ -81,8 +78,8 @@ public class ServiceRepository {
     /**
      * Добавить показания пользователя
      *
-     * @param meterReading
-     * @return
+     * @param meterReading показание
+     * @return true если все успешно
      */
     public boolean addMeterReadings(MeterReading meterReading) {
         if (localRepository.getUsers().containsKey(tempUser.getUsername())) {
@@ -95,8 +92,8 @@ public class ServiceRepository {
     /**
      * Показать последнее добавленное показание
      *
-     * @param username
-     * @return
+     * @param username имя
+     * @return строку
      */
     public String showLatestReading(String username) {
         MeterReading latestReading = localRepository.getLatestReadings().get(username);
@@ -109,7 +106,7 @@ public class ServiceRepository {
     /**
      * Проверка истории показаний
      *
-     * @return
+     * @return true если история существует
      */
     public boolean checkMeterHistory() {
         return localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings().isEmpty();
@@ -118,16 +115,19 @@ public class ServiceRepository {
     /**
      * Отобразить историю подачи показаний
      *
-     * @return
+     * @return строка
      */
     public String showMeterHistory() {
         List<MeterReading> listMR = localRepository.getUsers().get(tempUser.getUsername()).getMeterReadings();
         StringBuilder stringBuilder = new StringBuilder();
         for (MeterReading mr : listMR) {
-            stringBuilder.append(mr.getMonth() +
-                    " - Отопление: " + mr.getHeating() +
-                    ", Горячая вода: " + mr.getHotWater() +
-                    ", Холодная вода: " + mr.getColdWater() + "\n");
+            stringBuilder.append(mr.getMonth()).append(" - Отопление: ")
+                    .append(mr.getHeating())
+                    .append(", Горячая вода: ")
+                    .append(mr.getHotWater())
+                    .append(", Холодная вода: ")
+                    .append(mr.getColdWater())
+                    .append("\n");
         }
         return stringBuilder.toString();
 
@@ -136,7 +136,7 @@ public class ServiceRepository {
     /**
      * Добавляет временного пользователя для работы с ним
      *
-     * @param username
+     * @param username имя
      */
     public void addTempUser(String username) {
         this.tempUser = localRepository.getUsers().get(username);
@@ -151,8 +151,8 @@ public class ServiceRepository {
 
     /**
      * Проверка существуют ли показания в последних добавленных
-     * @param username
-     * @return
+     * @param username имя
+     * @return true если существует
      */
     public boolean checkLatestReading(String username) {
         return localRepository.getLatestReadings().containsKey(username);
@@ -161,9 +161,9 @@ public class ServiceRepository {
     /**
      * Вернуть запись переданного месяца
      *
-     * @param username
-     * @param month
-     * @return
+     * @param username имя
+     * @param month месяц
+     * @return строка
      */
     public String getReadingsForMonth(String username, String month) {
         List<MeterReading> listMR = localRepository.getUsers().get(username).getMeterReadings();

@@ -1,18 +1,15 @@
 package view.menu.commands;
 
+import lombok.AllArgsConstructor;
 import view.ConsoleUI;
 
 /**
  * Команда для выбора показания по месяцу
  */
+@AllArgsConstructor
 public class ViewReadingsForMonth implements Command {
-    private final ConsoleUI consoleUI;
     private final String userName;
-
-    public ViewReadingsForMonth(String userName, ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-        this.userName = userName;
-    }
+    private final ConsoleUI consoleUI;
 
     @Override
     public String getDescription() {

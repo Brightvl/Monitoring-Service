@@ -5,10 +5,12 @@ import view.menu.commands.Command;
 
 import java.util.List;
 
+
 public abstract class Menu {
     private final List<Command> commandList;
 
     private boolean isRunning;
+
 
     public Menu(List<Command> commandList) {
         this.commandList = commandList;

@@ -1,16 +1,14 @@
 package view.menu.commands;
 
+import lombok.AllArgsConstructor;
 import view.ConsoleUI;
 
 /**
  * Для возврата из меню пользователя
  */
+@AllArgsConstructor
 public class BackMenu implements Command {
     private final ConsoleUI consoleUI;
-
-    public BackMenu(ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-    }
 
     @Override
     public String getDescription() {

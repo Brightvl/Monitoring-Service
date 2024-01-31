@@ -1,18 +1,15 @@
 package view.menu.commands;
 
+import lombok.AllArgsConstructor;
 import view.ConsoleUI;
 
 /**
  * Команда для отображения последнего изменения
  */
+@AllArgsConstructor
 public class ViewLatestReading implements Command {
-    private final ConsoleUI consoleUI;
     private final String userName;
-
-    public ViewLatestReading(String userName, ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-        this.userName = userName;
-    }
+    private final ConsoleUI consoleUI;
 
     @Override
     public String getDescription() {

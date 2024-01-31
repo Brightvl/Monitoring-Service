@@ -16,7 +16,7 @@ public class Presenter {
     /**
      * Сервис для удобной работы с классами хранящими данные показаний и пользователя
      */
-    private ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
 
 
     public Presenter(View view) {
@@ -27,9 +27,9 @@ public class Presenter {
     /**
      * Зарегистрировать пользователя
      *
-     * @param username
-     * @param password
-     * @return
+     * @param username имя
+     * @param password пароль
+     * @return true если успешно
      */
     public boolean registerUser(String username, String password) {
         return serviceRepository.registerUser(username, password);
@@ -40,7 +40,7 @@ public class Presenter {
      *
      * @param username имя
      * @param password пароль
-     * @return true при успешной
+     * @return true если успешно
      */
     public boolean tryVerification(String username, String password) {
         return serviceRepository.tryVerification(username, password);
@@ -49,8 +49,8 @@ public class Presenter {
     /**
      * Проверка существования пользователя
      *
-     * @param username
-     * @return
+     * @param username имя
+     * @return true если существует
      */
     public boolean checkUserExistence(String username) {
         return serviceRepository.checkUserExistence(username);
@@ -60,8 +60,8 @@ public class Presenter {
     /**
      * Проверка существования последней записи
      *
-     * @param month
-     * @return
+     * @param month месяц
+     * @return true если существует
      */
     public boolean checkMonthLatestReading(String month) {
         return serviceRepository.checkMonthLatestReading(month);
@@ -70,9 +70,9 @@ public class Presenter {
     /**
      * Отобразить показания за выбранный месяц
      *
-     * @param username
-     * @param month
-     * @return
+     * @param username имя
+     * @param month месяц
+     * @return строка с месяцами
      */
     public String showReadingsForMonth(String username, String month) {
         return serviceRepository.getReadingsForMonth(username, month);
@@ -81,8 +81,8 @@ public class Presenter {
     /**
      * Добавить показания
      *
-     * @param meterReading
-     * @return
+     * @param meterReading показания
+     * @return true если успешно
      */
     public boolean addMeterReadings(MeterReading meterReading) {
         return serviceRepository.addMeterReadings(meterReading);
@@ -92,7 +92,7 @@ public class Presenter {
     /**
      * Проверить существование истории подачи показаний
      *
-     * @return
+     * @return true если существует
      */
     public boolean checkMeterHistory() {
         return serviceRepository.checkMeterHistory();
@@ -101,7 +101,7 @@ public class Presenter {
     /**
      * Показать историю подачи показаний
      *
-     * @return
+     * @return true если существует история
      */
     public String showMeterHistory() {
         return serviceRepository.showMeterHistory();
@@ -109,9 +109,9 @@ public class Presenter {
 
 
     /**
-     * Во время работы user menu пусть servise repository запомнит пользователя
+     * Во время работы user menu пусть service repository запомнит пользователя
      *
-     * @param username
+     * @param username имя
      */
     public void addTempUser(String username) {
         serviceRepository.addTempUser(username);
@@ -127,8 +127,8 @@ public class Presenter {
     /**
      * Проверить существование последней добавленной записи
      *
-     * @param username
-     * @return
+     * @param username имя
+     * @return true если существует
      */
     public boolean checkLatestReading(String username) {
         return serviceRepository.checkLatestReading(username);
@@ -137,7 +137,7 @@ public class Presenter {
     /**
      * Показать последние добавленные записи
      *
-     * @return
+     * @return строку с записью
      */
     public String showLatestReading(String username) {
         return serviceRepository.showLatestReading(username);
