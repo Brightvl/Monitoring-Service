@@ -5,9 +5,9 @@ import java.util.Scanner;
 /**
  * Класс для удобного ввода и вывода в консоль
  */
-public class ConsoleReader  implements Output, Input{
+public class ConsoleReader implements Output, Input {
 
-    private Scanner scanner;
+    private final Scanner scanner;
 
     public ConsoleReader() {
         this.scanner = new Scanner(System.in);
@@ -23,39 +23,38 @@ public class ConsoleReader  implements Output, Input{
         return line.matches("[0-9]+");
     }
 
-    public String  nextLine() {
-        return scanner.nextLine();
+    public Integer nextInt() {
+        return scanner.nextInt();
+    }
+
+    public String next() {
+        return scanner.next();
     }
 
     /**
-     * Ввод для пользователя с сообщением
-     * @param message
-     * @return
+     * Ввод для пользователя с сообщением с переносом
+     *
+     * @param message сообщение
+     * @return число
      */
-    public String inputln(String message) {
-        System.out.println(message);
-        return nextLine();
+    public Integer inputNextInt(String message) {
+        System.out.print(message);
+        return nextInt();
     }
 
+    /**
+     * Ввод для пользователя с сообщением в одну строку
+     *
+     * @param message сообщение
+     * @return строка
+     */
     public String input(String message) {
         System.out.print(message);
-        return nextLine();
+        return next();
     }
+
 
     public void println(String message) {
         System.out.println(message);
     }
-
-    public void print(String message) {
-        System.out.print(message);
-    }
-
-    public void printToyInfo() {
-        System.out.printf("%-3s %-14s %-2s %-8s%n", "id", "Название", "Количество", "Вес");
-    }
-
-    public void printWonToyInfo() {
-        System.out.printf("%-3s %-14s %-2s %-8s%n", "№", "Название", "Количество", "Выиграно штук");
-    }
-
 }

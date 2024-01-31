@@ -9,7 +9,6 @@ import view.menu.typesMenu.MainMenu;
 import view.menu.typesMenu.UserMenu;
 
 import java.util.InputMismatchException;
-import java.util.Scanner;
 
 /**
  * Консольное отображение
@@ -19,25 +18,19 @@ public class ConsoleUI implements View {
     /**
      * Презентер приложения
      */
-    private Presenter presenter;
+    private final Presenter presenter;
     /**
      * Меню программы
      */
     private Menu menu;
-    /**
-     * Чтение с консоли
-     */
-    private final Scanner scanner;
-
-    private final ConsoleReader consoleReader;
+    private final ConsoleReader cReader;
 
     /**
      * Конструктор класса
      */
     public ConsoleUI() {
         this.presenter = new Presenter(this);
-        this.scanner = new Scanner(System.in);
-        this.consoleReader = new ConsoleReader();
+        this.cReader = new ConsoleReader();
     }
 
     /**
@@ -54,10 +47,10 @@ public class ConsoleUI implements View {
     private void showMenu() {
         menu = new MainMenu(this);
         while (menu.isRunning()) {
-            consoleReader.println(menu.printMenu());
-            String choice = consoleReader.input("Выберите пункт меню: ");
+            cReader.println(menu.printMenu());
+            String choice = cReader.input("Выберите пункт меню: ");
             if (menu.checkInputLineMenu(choice) == -1) {
-                consoleReader.println("Ошибка ввода");
+                cReader.println("Ошибка ввода");
                 continue;
             }
             menu.execute(Integer.parseInt(choice));
@@ -68,14 +61,12 @@ public class ConsoleUI implements View {
      * Регистрация пользователя
      */
     public void registerUser() {
-        System.out.print("Введите имя: ");
-        String username = scanner.next();
+        String username = cReader.input("Введите имя: ");
 
         if (presenter.checkUserExistence(username)) {
             System.out.println("Пользователь уже существует. Пожалуйста, выберите другое имя пользователя.");
         } else {
-            System.out.print("Введите пароль: ");
-            String password = scanner.next();
+            String password = cReader.input("Введите пароль: ");
             if (presenter.registerUser(username, password)) {
                 System.out.println("Пользователь успешно зарегистрирован.");
             } else {
@@ -88,12 +79,8 @@ public class ConsoleUI implements View {
      * Залогиниться
      */
     public void loginUser() {
-        System.out.print("Введите имя пользователя: ");
-        String username = scanner.next();
-
-        System.out.print("Введите пароль: ");
-        String password = scanner.next();
-
+        String username = cReader.input("Введите имя пользователя: ");
+        String password = cReader.input("Введите пароль: ");
         if (presenter.checkUserExistence(username)
                 && presenter.tryVerification(username, password)) {
             System.out.println("Авторизация успешна.");
@@ -103,7 +90,6 @@ public class ConsoleUI implements View {
         } else {
             System.out.println("Неверные учетные данные. Пожалуйста, попробуйте еще раз.");
         }
-
     }
 
     /**
@@ -112,10 +98,10 @@ public class ConsoleUI implements View {
     private void showClientMenu(String username) {
         this.menu = new UserMenu(username, this);
         while (menu.isRunning()) {
-            consoleReader.println(menu.printMenu());
-            String choice = consoleReader.input("Выберите пункт меню: ");
+            cReader.println(menu.printMenu());
+            String choice = cReader.input("Выберите пункт меню: ");
             if (menu.checkInputLineMenu(choice) == -1) {
-                consoleReader.println("Ошибка ввода");
+                cReader.println("Ошибка ввода");
                 continue;
             }
             menu.execute(Integer.parseInt(choice));
@@ -129,21 +115,15 @@ public class ConsoleUI implements View {
      * @param username имя
      */
     public void submitMeterReading(String username) {
-        System.out.print("Введите месяц: ");
-        String month = scanner.next();
+        String month = cReader.input("Введите месяц: ");
         if (Month.checkMonth(month)) {
             if (presenter.checkUserExistence(username) && presenter.checkMonthLatestReading(month)) {
                 System.out.println("Показания счетчиков за этот месяц уже поданы. Редактирование запрещено.");
             } else {
                 try {
-                    System.out.print("Введите показания нагрева: ");
-                    int heating = (scanner.nextInt());
-
-                    System.out.print("Введите показания горячей воды: ");
-                    int hotWater = scanner.nextInt();
-
-                    System.out.print("Введите показания холодной воды: ");
-                    int coldWater = scanner.nextInt();
+                    int heating = cReader.inputNextInt("Введите показания нагрева: ");
+                    int hotWater = cReader.inputNextInt("Введите показания горячей воды: ");
+                    int coldWater = cReader.inputNextInt("Введите показания холодной воды: ");
 
                     if (presenter.addMeterReadings(new MeterReading(month, heating, hotWater, coldWater))) {
                         System.out.println("Показания счетчика успешно отправлены.");
@@ -152,7 +132,7 @@ public class ConsoleUI implements View {
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Ошибка ввода. Пожалуйста, введите целые числа.");
-                    scanner.next(); // Очищаем буфер ввода от неверных данных
+                    cReader.next();
                 }
             }
         } else {
@@ -160,11 +140,10 @@ public class ConsoleUI implements View {
         }
     }
 
-
     /**
      * Отобразить последнее добавленное показание
      *
-     * @param username
+     * @param username имя пользователя
      */
     public void viewLatestReading(String username) {
         if (presenter.checkLatestReading(username)) {
@@ -174,11 +153,10 @@ public class ConsoleUI implements View {
         }
     }
 
-
     /**
      * Показать историю сообщений
      *
-     * @param username
+     * @param username имя пользователя
      */
     public void viewReadingHistory(String username) {
         if (presenter.checkMeterHistory()) {
@@ -192,12 +170,11 @@ public class ConsoleUI implements View {
     /**
      * Просмотр показаний за конкретный месяц
      *
-     * @param username
+     * @param username имя пользователя
      */
     public void viewReadingsForMonth(String username) {
         if (!presenter.checkMeterHistory()) {
-            System.out.println("Введите месяц: ");
-            String month = scanner.next();
+            String month = cReader.input("Введите месяц: ");
             if (Month.checkMonth(month)) {
                 if (presenter.checkUserExistence(username)) {
                     System.out.println(presenter.showReadingsForMonth(username, month));
@@ -220,9 +197,5 @@ public class ConsoleUI implements View {
         System.out.println("Выход из системы...");
         presenter.exitUser();
         showMenu();
-    }
-
-    public void setPresenter(Presenter mockPresenter) {
-        this.presenter = mockPresenter;
     }
 }
