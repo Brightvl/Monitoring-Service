@@ -1,7 +1,7 @@
 package presenter;
 
 import model.meter.MeterReading;
-import model.repository.ServiceRepository;
+import model.ServiceRepository;
 import view.View;
 
 /**
@@ -70,12 +70,11 @@ public class Presenter {
     /**
      * Отобразить показания за выбранный месяц
      *
-     * @param username имя
      * @param month месяц
      * @return строка с месяцами
      */
-    public String showReadingsForMonth(String username, String month) {
-        return serviceRepository.getReadingsForMonth(username, month);
+    public String showReadingsForMonth(String month) {
+        return serviceRepository.getReadingsForMonth(month);
     }
 
     /**
@@ -108,14 +107,6 @@ public class Presenter {
     }
 
 
-    /**
-     * Во время работы user menu пусть service repository запомнит пользователя
-     *
-     * @param username имя
-     */
-    public void addTempUser(String username) {
-        serviceRepository.addTempUser(username);
-    }
 
     /**
      * Когда закрывается меню пользователя пользователь обнуляется
@@ -127,11 +118,10 @@ public class Presenter {
     /**
      * Проверить существование последней добавленной записи
      *
-     * @param username имя
      * @return true если существует
      */
-    public boolean checkLatestReading(String username) {
-        return serviceRepository.checkLatestReading(username);
+    public boolean checkLatestReading() {
+        return serviceRepository.checkLatestReading();
     }
 
     /**
@@ -141,5 +131,13 @@ public class Presenter {
      */
     public String showLatestReading(String username) {
         return serviceRepository.showLatestReading(username);
+    }
+
+    public boolean checkOnAdmin() {
+        return serviceRepository.checkOnAdmin();
+    }
+
+    public String showAllLatestReading() {
+        return serviceRepository.showAllLatestReading();
     }
 }

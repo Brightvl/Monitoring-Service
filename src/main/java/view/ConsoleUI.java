@@ -5,6 +5,7 @@ import model.meter.MeterReading;
 import presenter.Presenter;
 import view.interactionConsole.ConsoleReader;
 import view.menu.Menu;
+import view.menu.typesMenu.AdminMenu;
 import view.menu.typesMenu.MainMenu;
 import view.menu.typesMenu.UserMenu;
 
@@ -31,6 +32,7 @@ public class ConsoleUI implements View {
     public ConsoleUI() {
         this.presenter = new Presenter(this);
         this.cReader = new ConsoleReader();
+        this.menu = null;
     }
 
     /**
@@ -38,14 +40,14 @@ public class ConsoleUI implements View {
      */
     @Override
     public void run() {
-        showMenu();
+        showMainMenu();
     }
 
     /**
-     * Отображение меню
+     * Пользовательское меню
      */
-    private void showMenu() {
-        menu = new MainMenu(this);
+    private void showMenu(Menu menu) {
+        this.menu = menu;
         while (menu.isRunning()) {
             cReader.println(menu.printMenu());
             String choice = cReader.input("Выберите пункт меню: ");
@@ -55,6 +57,28 @@ public class ConsoleUI implements View {
             }
             menu.execute(Integer.parseInt(choice));
         }
+    }
+
+    /**
+     * Отображение меню
+     */
+    private void showMainMenu() {
+        showMenu(new MainMenu(this));
+    }
+
+    /**
+     * Отображение меню админа
+     * @param username имя
+     */
+    private void showAdminMenu(String username) {
+        showMenu(new AdminMenu(username, this));
+    }
+
+    /**
+     * Пользовательское меню
+     */
+    private void showClientMenu(String username) {
+        showMenu(new UserMenu(username, this));
     }
 
     /**
@@ -84,30 +108,15 @@ public class ConsoleUI implements View {
         if (presenter.checkUserExistence(username)
                 && presenter.tryVerification(username, password)) {
             System.out.println("Авторизация успешна.");
-            presenter.addTempUser(username);
-            // Выполнение действий
-            showClientMenu(username);
+            if (presenter.checkOnAdmin()) {
+                showAdminMenu(username);
+            } else {
+                showClientMenu(username);
+            }
         } else {
             System.out.println("Неверные учетные данные. Пожалуйста, попробуйте еще раз.");
         }
     }
-
-    /**
-     * Пользовательское меню
-     */
-    private void showClientMenu(String username) {
-        this.menu = new UserMenu(username, this);
-        while (menu.isRunning()) {
-            cReader.println(menu.printMenu());
-            String choice = cReader.input("Выберите пункт меню: ");
-            if (menu.checkInputLineMenu(choice) == -1) {
-                cReader.println("Ошибка ввода");
-                continue;
-            }
-            menu.execute(Integer.parseInt(choice));
-        }
-    }
-
 
     /**
      * Добавить показания счетчика
@@ -146,7 +155,7 @@ public class ConsoleUI implements View {
      * @param username имя пользователя
      */
     public void viewLatestReading(String username) {
-        if (presenter.checkLatestReading(username)) {
+        if (presenter.checkLatestReading()) {
             System.out.println(presenter.showLatestReading(username));
         } else {
             System.out.println("Для пользователя нет доступных показаний.");
@@ -155,10 +164,8 @@ public class ConsoleUI implements View {
 
     /**
      * Показать историю сообщений
-     *
-     * @param username имя пользователя
      */
-    public void viewReadingHistory(String username) {
+    public void viewReadingHistory() {
         if (presenter.checkMeterHistory()) {
             System.out.println("Для пользователя нет истории чтения.");
         } else {
@@ -177,7 +184,7 @@ public class ConsoleUI implements View {
             String month = cReader.input("Введите месяц: ");
             if (Month.checkMonth(month)) {
                 if (presenter.checkUserExistence(username)) {
-                    System.out.println(presenter.showReadingsForMonth(username, month));
+                    System.out.println(presenter.showReadingsForMonth(month));
                 } else {
                     System.out.println("Неизвестный пользователь");
                 }
@@ -196,6 +203,14 @@ public class ConsoleUI implements View {
     public void exitUserMenu() {
         System.out.println("Выход из системы...");
         presenter.exitUser();
-        showMenu();
+        showMainMenu();
+    }
+
+    public void showAllLatestReading() {
+        if (presenter.checkLatestReading()) {
+            System.out.println(presenter.showAllLatestReading());
+        } else {
+            System.out.println("Пока нет последних добавленных показаний");
+        }
     }
 }
