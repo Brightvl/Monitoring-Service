@@ -22,7 +22,7 @@ public class AdminMenu extends Menu {
     }
 
     protected void initCommands() {
-
+        addCommand(new ViewAllLatestReading(consoleUI));
         addCommand(new BackMenu(consoleUI));
     }
 }

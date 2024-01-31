@@ -6,6 +6,7 @@ import model.user.Client;
 import model.user.User;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Сервис соединяет Presenter и конкретную бизнес логику классов
@@ -35,7 +36,7 @@ public class ServiceRepository {
      */
     public boolean registerUser(String username, String password) {
         try {
-            localRepository.putUsers(username, new User(username, password));
+            localRepository.addUsers(new User(username, password));
             return true;
         } catch (Exception e) {
             return false;
@@ -50,7 +51,7 @@ public class ServiceRepository {
      * @return true если верификация успешна
      */
     public boolean tryVerification(String username, String password) {
-        if (localRepository.getUsers().get(username).getPassword().equals(password)) {
+        if (localRepository.getClientByName(username).getPassword().equals(password)) {
             addTempUser(username);
             return true;
         }
@@ -68,7 +69,7 @@ public class ServiceRepository {
      * @return возвращает true если пользователь существует
      */
     public boolean checkUserExistence(String username) {
-        return localRepository.getUsers().containsKey(username);
+        return localRepository.checkClientExistence(username);
     }
 
     /**
@@ -92,24 +93,10 @@ public class ServiceRepository {
      * @return true если все успешно
      */
     public boolean addMeterReadings(MeterReading meterReading) {
-        if (localRepository.getUsers().containsKey(tempUser.getUsername())) {
+        if (localRepository.checkClientExistence(tempUser.getUsername())) {
             return localRepository.addMeterReadings(tempUser.getUsername(), meterReading);
         }
         return false;
-    }
-
-    /**
-     * Показать последнее добавленное показание
-     *
-     * @param username имя
-     * @return строку
-     */
-    public String showLatestReading(String username) {
-        MeterReading latestReading = localRepository.getLatestReadings().get(username);
-        return "Последнее добавленное: " + latestReading.getMonth() +
-                " - Отопление: " + latestReading.getHeating() +
-                ", Горячая вода: " + latestReading.getHotWater() +
-                ", Холодная вода: " + latestReading.getColdWater();
     }
 
     /**
@@ -153,7 +140,7 @@ public class ServiceRepository {
      * @param username имя
      */
     public void addTempUser(String username) {
-        this.tempUser = localRepository.getUsers().get(username);
+        this.tempUser = localRepository.getClientByName(username);
     }
 
     /**
@@ -166,12 +153,43 @@ public class ServiceRepository {
     /**
      * Проверка существуют ли показания в последних добавленных
      *
-     * @param username имя
      * @return true если существует
      */
-    public boolean checkLatestReading(String username) {
-        return localRepository.getLatestReadings().containsKey(username);
+    public boolean checkLatestReading() {
+        if (tempUser instanceof User) {
+            return localRepository.getLatestReadings().containsKey(tempUser.getUsername());
+        } else if (tempUser instanceof Admin) {
+            return !localRepository.getLatestReadings().isEmpty();
+        }
+        return false;
     }
+
+    /**
+     * Показать последнее добавленное показание
+     *
+     * @param username имя
+     * @return строку
+     */
+    public String showLatestReading(String username) {
+        MeterReading latestReading = localRepository.getLatestReadings().get(username);
+        return "Последнее добавленное: " + latestReading.getMonth() +
+                " - Отопление: " + latestReading.getHeating() +
+                ", Горячая вода: " + latestReading.getHotWater() +
+                ", Холодная вода: " + latestReading.getColdWater();
+    }
+
+    public String showAllLatestReading() {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, MeterReading> entry : localRepository.getLatestReadings().entrySet()) {
+            sb.append("Пользователь: " + entry.getKey() +
+                    ", Последнее добавленное: " + entry.getValue().getMonth() +
+                    " - Отопление: " + entry.getValue().getHeating() +
+                    ", Горячая вода: " + entry.getValue().getHotWater() +
+                    ", Холодная вода: " + entry.getValue().getColdWater() + "\n");
+        }
+        return sb.toString();
+    }
+
 
     /**
      * Вернуть запись переданного месяца

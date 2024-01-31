@@ -107,14 +107,6 @@ public class Presenter {
     }
 
 
-    /**
-     * Во время работы user menu пусть service repository запомнит пользователя
-     *
-     * @param username имя
-     */
-    public void addTempUser(String username) {
-        serviceRepository.addTempUser(username);
-    }
 
     /**
      * Когда закрывается меню пользователя пользователь обнуляется
@@ -126,11 +118,10 @@ public class Presenter {
     /**
      * Проверить существование последней добавленной записи
      *
-     * @param username имя
      * @return true если существует
      */
-    public boolean checkLatestReading(String username) {
-        return serviceRepository.checkLatestReading(username);
+    public boolean checkLatestReading() {
+        return serviceRepository.checkLatestReading();
     }
 
     /**
@@ -144,5 +135,9 @@ public class Presenter {
 
     public boolean checkOnAdmin() {
         return serviceRepository.checkOnAdmin();
+    }
+
+    public String showAllLatestReading() {
+        return serviceRepository.showAllLatestReading();
     }
 }

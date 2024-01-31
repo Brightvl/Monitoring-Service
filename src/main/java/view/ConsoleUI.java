@@ -155,7 +155,7 @@ public class ConsoleUI implements View {
      * @param username имя пользователя
      */
     public void viewLatestReading(String username) {
-        if (presenter.checkLatestReading(username)) {
+        if (presenter.checkLatestReading()) {
             System.out.println(presenter.showLatestReading(username));
         } else {
             System.out.println("Для пользователя нет доступных показаний.");
@@ -204,5 +204,13 @@ public class ConsoleUI implements View {
         System.out.println("Выход из системы...");
         presenter.exitUser();
         showMainMenu();
+    }
+
+    public void showAllLatestReading() {
+        if (presenter.checkLatestReading()) {
+            System.out.println(presenter.showAllLatestReading());
+        } else {
+            System.out.println("Пока нет последних добавленных показаний");
+        }
     }
 }
