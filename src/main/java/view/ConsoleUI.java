@@ -5,6 +5,7 @@ import model.meter.MeterReading;
 import presenter.Presenter;
 import view.interactionConsole.ConsoleReader;
 import view.menu.Menu;
+import view.menu.typesMenu.AdminMenu;
 import view.menu.typesMenu.MainMenu;
 import view.menu.typesMenu.UserMenu;
 
@@ -84,19 +85,32 @@ public class ConsoleUI implements View {
         if (presenter.checkUserExistence(username)
                 && presenter.tryVerification(username, password)) {
             System.out.println("Авторизация успешна.");
-            presenter.addTempUser(username);
-            // Выполнение действий
-            showClientMenu(username);
+            if (presenter.checkOnAdmin()) {
+                showAdminMenu(username);
+            } else {
+                showClientMenu(username);
+            }
         } else {
             System.out.println("Неверные учетные данные. Пожалуйста, попробуйте еще раз.");
         }
+    }
+
+    private void showAdminMenu(String username) {
+        showMenu(new AdminMenu(username, this));
     }
 
     /**
      * Пользовательское меню
      */
     private void showClientMenu(String username) {
-        this.menu = new UserMenu(username, this);
+        showMenu(new UserMenu(username, this));
+    }
+
+    /**
+     * Пользовательское меню
+     */
+    private void showMenu(Menu menu) {
+        this.menu = menu;
         while (menu.isRunning()) {
             cReader.println(menu.printMenu());
             String choice = cReader.input("Выберите пункт меню: ");

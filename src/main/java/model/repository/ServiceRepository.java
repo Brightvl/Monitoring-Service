@@ -1,6 +1,7 @@
 package model.repository;
 
 import model.meter.MeterReading;
+import model.user.Admin;
 import model.user.Client;
 import model.user.User;
 
@@ -49,7 +50,15 @@ public class ServiceRepository {
      * @return true если верификация успешна
      */
     public boolean tryVerification(String username, String password) {
-        return localRepository.getUsers().get(username).getPassword().equals(password);
+        if (localRepository.getUsers().get(username).getPassword().equals(password)) {
+            addTempUser(username);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkOnAdmin() {
+        return tempUser instanceof Admin;
     }
 
     /**
@@ -167,7 +176,7 @@ public class ServiceRepository {
     /**
      * Вернуть запись переданного месяца
      *
-     * @param month    месяц
+     * @param month месяц
      * @return строка
      */
     public String getReadingsForMonth(String month) {

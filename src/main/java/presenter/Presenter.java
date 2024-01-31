@@ -141,4 +141,8 @@ public class Presenter {
     public String showLatestReading(String username) {
         return serviceRepository.showLatestReading(username);
     }
+
+    public boolean checkOnAdmin() {
+        return serviceRepository.checkOnAdmin();
+    }
 }

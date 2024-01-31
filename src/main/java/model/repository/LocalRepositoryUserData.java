@@ -1,6 +1,7 @@
 package model.repository;
 
 import model.meter.MeterReading;
+import model.user.Admin;
 import model.user.Client;
 import model.user.User;
 
@@ -14,12 +15,24 @@ public class LocalRepositoryUserData {
     /**
      * Словарь пользователей
      */
-    private final Map<String, Client> users = new HashMap<>();
+    private final Map<String, Client> users;
     /**
      * Коллекция последних поданных пользователем данных
      */
-    private final Map<String, MeterReading> latestReadings = new HashMap<>();
+    private final Map<String, MeterReading> latestReadings;
 
+    public LocalRepositoryUserData() {
+        this.users = new HashMap<>();
+        this.latestReadings = new HashMap<>();
+        initializeList();
+    }
+
+    /**
+     * Инициализация начальных пользователей
+     */
+    private void initializeList() {
+        users.put("Adam", new Admin("Adam", "1234"));
+    }
 
     /**
      * Добавление пользователя в коллекцию
@@ -33,15 +46,14 @@ public class LocalRepositoryUserData {
 
     /**
      * Добавляем показания пользователю
-     * @param username имя
+     *
+     * @param username     имя
      * @param meterReading параметр
      * @return true если успешно
      */
     public boolean addMeterReadings(String username, MeterReading meterReading) {
-        // добавляем пользователю показания;
         if (users.get(username) instanceof User) {
             ((User) users.get(username)).addMeterReading(meterReading);
-            // добавляем показания в последние
             latestReadings.put(username, meterReading);
             return true;
         }
