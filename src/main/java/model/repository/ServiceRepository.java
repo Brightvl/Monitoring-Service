@@ -54,7 +54,6 @@ public class ServiceRepository {
         }
     }
 
-
     /**
      * Проверка существования пользователя
      *

@@ -6,8 +6,8 @@ import view.ConsoleUI;
  * Команда для отображения последнего изменения
  */
 public class ViewLatestReading implements Command {
-    private ConsoleUI consoleUI;
-    private String userName;
+    private final ConsoleUI consoleUI;
+    private final String userName;
 
     public ViewLatestReading(String userName, ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;

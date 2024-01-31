@@ -6,7 +6,7 @@ import view.ConsoleUI;
  * Команда для регистрации
  */
 public class SignUp implements Command {
-    private ConsoleUI consoleUI;
+    private final ConsoleUI consoleUI;
 
     public SignUp(ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;

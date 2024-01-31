@@ -37,12 +37,4 @@ public enum Month {
         }
         return false;
     }
-
-    /**
-     * Проверка соответствия переданного месяца
-     *
-     * @param month
-     * @return
-     */
-
 }

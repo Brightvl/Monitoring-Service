@@ -6,7 +6,7 @@ import view.ConsoleUI;
  * Команда для входа пользователя
  */
 public class LoginUser implements Command {
-    private ConsoleUI consoleUI;
+    private final ConsoleUI consoleUI;
 
     public LoginUser(ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;

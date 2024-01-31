@@ -9,33 +9,21 @@ import view.menu.commands.SignUp;
 import java.util.ArrayList;
 
 /**
- * MainMenu представляет главное меню приложения игрушечного магазина.
+ * MainMenu представляет главное меню приложения.
  * Он наследует класс Menu и предоставляет команды для взаимодействия с пользователем.
  */
 public class MainMenu extends Menu {
-    private boolean isRunning;
-    private ConsoleUI consoleUI;
+    private final ConsoleUI consoleUI;
 
     public MainMenu(ConsoleUI consoleUI) {
-        super(new ArrayList());
-        this.isRunning = true;
+        super(new ArrayList<>());
         this.consoleUI = consoleUI;
         initCommands();
     }
 
-    private void initCommands() {
+     protected void initCommands() {
         addCommand(new SignUp(consoleUI));
         addCommand(new LoginUser(consoleUI));
-        addCommand(new CloseProgram(consoleUI));
-    }
-
-
-    public void setRunning(boolean running) {
-        this.isRunning = running;
-    }
-
-
-    public boolean isRunning() {
-        return this.isRunning;
+        addCommand(new CloseProgram());
     }
 }

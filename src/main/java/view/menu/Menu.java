@@ -6,14 +6,19 @@ import view.menu.commands.Command;
 import java.util.List;
 
 public abstract class Menu {
-    private List<Command> commandList;
+    private final List<Command> commandList;
 
     private boolean isRunning;
 
     public Menu(List<Command> commandList) {
         this.commandList = commandList;
+        this.isRunning = true;
     }
 
+    /**
+     * Метод для инициализации меню
+     */
+    protected abstract void initCommands();
 
     /**
      * Возвращает строку, содержащую отформатированное меню с описаниями команд.

@@ -17,14 +17,19 @@ import java.util.Scanner;
 public class ConsoleUI implements View {
 
     /**
-     * Прзентер приложения
+     * Презентер приложения
      */
     private Presenter presenter;
-
+    /**
+     * Меню программы
+     */
     private Menu menu;
+    /**
+     * Чтение с консоли
+     */
+    private final Scanner scanner;
 
-    private Scanner scanner;
-    private ConsoleReader consoleReader;
+    private final ConsoleReader consoleReader;
 
     /**
      * Конструктор класса

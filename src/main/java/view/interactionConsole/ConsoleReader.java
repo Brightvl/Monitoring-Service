@@ -2,6 +2,9 @@ package view.interactionConsole;
 
 import java.util.Scanner;
 
+/**
+ * Класс для удобного ввода и вывода в консоль
+ */
 public class ConsoleReader  implements Output, Input{
 
     private Scanner scanner;

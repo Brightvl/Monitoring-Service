@@ -1,5 +1,8 @@
 package model.user;
 
+/**
+ * Класс клиента
+ */
 public abstract class Client {
 
     /**

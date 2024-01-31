@@ -6,8 +6,8 @@ import view.ConsoleUI;
  * Команда для выбора показания по месяцу
  */
 public class ViewReadingsForMonth implements Command {
-    private ConsoleUI consoleUI;
-    private String userName;
+    private final ConsoleUI consoleUI;
+    private final String userName;
 
     public ViewReadingsForMonth(String userName, ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;

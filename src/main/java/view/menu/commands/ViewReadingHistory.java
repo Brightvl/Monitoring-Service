@@ -6,8 +6,8 @@ import view.ConsoleUI;
  * Команда для отображения истории показаний
  */
 public class ViewReadingHistory implements Command {
-    private ConsoleUI consoleUI;
-    private String userName;
+    private final ConsoleUI consoleUI;
+    private final String userName;
 
     public ViewReadingHistory(String userName, ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;

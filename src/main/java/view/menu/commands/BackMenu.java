@@ -6,7 +6,7 @@ import view.ConsoleUI;
  * Для возврата из меню пользователя
  */
 public class BackMenu implements Command {
-    private  ConsoleUI consoleUI;
+    private final ConsoleUI consoleUI;
 
     public BackMenu(ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;

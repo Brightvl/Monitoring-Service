@@ -6,8 +6,8 @@ import view.ConsoleUI;
  * Команда для добавления показания счетчика
  */
 public class SubmitMeterReading implements Command {
-    private ConsoleUI consoleUI;
-    private String userName;
+    private final ConsoleUI consoleUI;
+    private final String userName;
 
     public SubmitMeterReading(String userName, ConsoleUI consoleUI) {
         this.consoleUI = consoleUI;
