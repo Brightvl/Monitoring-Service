@@ -1,7 +1,7 @@
 package presenter;
 
 import model.meter.MeterReading;
-import model.repository.ServiceRepository;
+import model.ServiceRepository;
 import view.View;
 
 /**
@@ -16,7 +16,7 @@ public class Presenter {
     /**
      * Сервис для удобной работы с классами хранящими данные показаний и пользователя
      */
-    private ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
 
 
     public Presenter(View view) {
@@ -27,9 +27,9 @@ public class Presenter {
     /**
      * Зарегистрировать пользователя
      *
-     * @param username
-     * @param password
-     * @return
+     * @param username имя
+     * @param password пароль
+     * @return true если успешно
      */
     public boolean registerUser(String username, String password) {
         return serviceRepository.registerUser(username, password);
@@ -40,7 +40,7 @@ public class Presenter {
      *
      * @param username имя
      * @param password пароль
-     * @return true при успешной
+     * @return true если успешно
      */
     public boolean tryVerification(String username, String password) {
         return serviceRepository.tryVerification(username, password);
@@ -49,8 +49,8 @@ public class Presenter {
     /**
      * Проверка существования пользователя
      *
-     * @param username
-     * @return
+     * @param username имя
+     * @return true если существует
      */
     public boolean checkUserExistence(String username) {
         return serviceRepository.checkUserExistence(username);
@@ -60,8 +60,8 @@ public class Presenter {
     /**
      * Проверка существования последней записи
      *
-     * @param month
-     * @return
+     * @param month месяц
+     * @return true если существует
      */
     public boolean checkMonthLatestReading(String month) {
         return serviceRepository.checkMonthLatestReading(month);
@@ -70,19 +70,18 @@ public class Presenter {
     /**
      * Отобразить показания за выбранный месяц
      *
-     * @param username
-     * @param month
-     * @return
+     * @param month месяц
+     * @return строка с месяцами
      */
-    public String showReadingsForMonth(String username, String month) {
-        return serviceRepository.getReadingsForMonth(username, month);
+    public String showReadingsForMonth(String month) {
+        return serviceRepository.getReadingsForMonth(month);
     }
 
     /**
      * Добавить показания
      *
-     * @param meterReading
-     * @return
+     * @param meterReading показания
+     * @return true если успешно
      */
     public boolean addMeterReadings(MeterReading meterReading) {
         return serviceRepository.addMeterReadings(meterReading);
@@ -92,7 +91,7 @@ public class Presenter {
     /**
      * Проверить существование истории подачи показаний
      *
-     * @return
+     * @return true если существует
      */
     public boolean checkMeterHistory() {
         return serviceRepository.checkMeterHistory();
@@ -101,21 +100,13 @@ public class Presenter {
     /**
      * Показать историю подачи показаний
      *
-     * @return
+     * @return true если существует история
      */
     public String showMeterHistory() {
         return serviceRepository.showMeterHistory();
     }
 
 
-    /**
-     * Во время работы user menu пусть servise repository запомнит пользователя
-     *
-     * @param username
-     */
-    public void addTempUser(String username) {
-        serviceRepository.addTempUser(username);
-    }
 
     /**
      * Когда закрывается меню пользователя пользователь обнуляется
@@ -127,19 +118,26 @@ public class Presenter {
     /**
      * Проверить существование последней добавленной записи
      *
-     * @param username
-     * @return
+     * @return true если существует
      */
-    public boolean checkLatestReading(String username) {
-        return serviceRepository.checkLatestReading(username);
+    public boolean checkLatestReading() {
+        return serviceRepository.checkLatestReading();
     }
 
     /**
      * Показать последние добавленные записи
      *
-     * @return
+     * @return строку с записью
      */
     public String showLatestReading(String username) {
         return serviceRepository.showLatestReading(username);
+    }
+
+    public boolean checkOnAdmin() {
+        return serviceRepository.checkOnAdmin();
+    }
+
+    public String showAllLatestReading() {
+        return serviceRepository.showAllLatestReading();
     }
 }

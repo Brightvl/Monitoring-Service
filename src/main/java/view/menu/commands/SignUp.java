@@ -1,16 +1,14 @@
 package view.menu.commands;
 
+import lombok.AllArgsConstructor;
 import view.ConsoleUI;
 
 /**
  * Команда для регистрации
  */
+@AllArgsConstructor
 public class SignUp implements Command {
     private final ConsoleUI consoleUI;
-
-    public SignUp(ConsoleUI consoleUI) {
-        this.consoleUI = consoleUI;
-    }
 
     @Override
     public String getDescription() {

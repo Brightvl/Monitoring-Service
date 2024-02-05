@@ -1,9 +1,13 @@
 package model.repository;
 
 import model.meter.MeterReading;
+import model.user.Admin;
+import model.user.Client;
 import model.user.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,37 +17,81 @@ public class LocalRepositoryUserData {
     /**
      * Словарь пользователей
      */
-    private Map<String, User> users = new HashMap<>();
+    private final List<Client> clients;
     /**
      * Коллекция последних поданных пользователем данных
      */
-    private Map<String, MeterReading> latestReadings = new HashMap<>();
+    private final Map<String, MeterReading> latestReadings;
 
+    public LocalRepositoryUserData() {
+        this.clients = new ArrayList<>();
+        this.latestReadings = new HashMap<>();
+        initializeList();
+    }
+
+    /**
+     * Инициализация начальных пользователей
+     */
+    private void initializeList() {
+        clients.add(new Admin("Adam", "1234"));
+    }
 
     /**
      * Добавление пользователя в коллекцию
-     * @param username
-     * @param user
+     *
+     * @param user     пользователь
      */
-    public void putUsers(String username, User user) {
-        users.put(username, user);
+    public void addUsers(User user) {
+        clients.add(user);
     }
 
     /**
      * Добавляем показания пользователю
-     * @param username
-     * @param meterReading
+     *
+     * @param username     имя
+     * @param meterReading параметр
+     * @return true если успешно
      */
-    public void addMeterReadings(String username, MeterReading meterReading) {
-        // добавляем пользователю показания;
-        users.get(username).getMeterReadings().add(meterReading);
-        // добавляем показания в последние
-        latestReadings.put(username, meterReading);
+    public boolean addMeterReadings(String username, MeterReading meterReading) {
+        if (getClientByName(username) instanceof User) {
+            ((User) getClientByName(username)).addMeterReading(meterReading);
+            latestReadings.put(username, meterReading);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Возвращает пользователя по имени
+     * @param clientName имя пользователя
+     * @return client
+     */
+    public Client getClientByName(String clientName) {
+        for (Client client : clients) {
+            if (client.getUsername().equalsIgnoreCase(clientName)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Проверяет есть ли пользователь в списке
+     * @param clientName имя
+     * @return true если да
+     */
+    public boolean checkClientExistence(String clientName) {
+        for (Client client : clients) {
+            if (client.getUsername().equalsIgnoreCase(clientName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //region getters/setters
-    public Map<String, User> getUsers() {
-        return new HashMap<>(users);
+    public ArrayList<Client> getClients() {
+        return new ArrayList<>(clients);
     }
 
     public Map<String, MeterReading> getLatestReadings() {
