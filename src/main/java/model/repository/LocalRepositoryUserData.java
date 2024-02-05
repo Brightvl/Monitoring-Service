@@ -89,13 +89,8 @@ public class LocalRepositoryUserData {
         return false;
     }
 
-    //region getters/setters
-    public ArrayList<Client> getClients() {
-        return new ArrayList<>(clients);
-    }
-
     public Map<String, MeterReading> getLatestReadings() {
         return new HashMap<>(latestReadings);
     }
-    //endregion
+
 }
