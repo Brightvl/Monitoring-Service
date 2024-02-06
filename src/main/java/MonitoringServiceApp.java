@@ -1,8 +1,4 @@
 import model.db.DatabaseConnection;
-import view.ConsoleUI;
-import view.View;
-
-import java.sql.SQLException;
 
 /**
  * Класс для запуска консольного приложения
@@ -10,9 +6,11 @@ import java.sql.SQLException;
 public class MonitoringServiceApp {
     public static void main(String[] args) {
 
-        DatabaseConnection.getConnection();
-        View consoleUI = new ConsoleUI();
-        consoleUI.run();
+//        DatabaseConnection.getConnection();
+
+        DatabaseConnection.getData();
+//        View consoleUI = new ConsoleUI();
+//        consoleUI.run();
     }
 }
 

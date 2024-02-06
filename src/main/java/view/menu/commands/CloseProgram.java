@@ -1,7 +1,5 @@
 package view.menu.commands;
 
-import view.ConsoleUI;
-
 /**
  * Закрытие программы
  */
