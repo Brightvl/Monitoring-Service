@@ -2,7 +2,8 @@ package view.menu.typesMenu;
 
 import view.ConsoleUI;
 import view.menu.Menu;
-import view.menu.commands.*;
+import view.menu.commands.BackMenu;
+import view.menu.commands.ViewAllLatestReading;
 
 import java.util.ArrayList;
 

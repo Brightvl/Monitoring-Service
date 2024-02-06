@@ -1,7 +1,5 @@
 package view.interactionConsole;
 
-import lombok.AllArgsConstructor;
-
 import java.util.Scanner;
 
 /**

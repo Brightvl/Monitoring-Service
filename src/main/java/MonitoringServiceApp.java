@@ -1,5 +1,4 @@
-import view.ConsoleUI;
-import view.View;
+import model.db.DatabaseConnection;
 
 /**
  * Класс для запуска консольного приложения
@@ -7,7 +6,11 @@ import view.View;
 public class MonitoringServiceApp {
     public static void main(String[] args) {
 
-        View consoleUI = new ConsoleUI();
-        consoleUI.run();
+//        DatabaseConnection.getConnection();
+
+        DatabaseConnection.getData();
+//        View consoleUI = new ConsoleUI();
+//        consoleUI.run();
     }
 }
+

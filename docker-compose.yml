@@ -1,0 +1,29 @@
+version: '3'
+services:
+  postgres:
+    container_name: postgres-monitoring
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: db_monitoring
+      POSTGRES_USER: brightvl
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  your-app:
+    container_name: monitoring-service-app
+    build:
+      context: src/main
+    depends_on:
+      - postgres
+    environment:
+      JDBC_URL: jdbc:postgresql://postgres:5432/db_monitoring
+      JDBC_USER: brightvl
+      JDBC_PASSWORD: password
+    volumes:
+      - ./src/main/resources/db/liquibase/changelog:/docker-entrypoint-initdb.d
+
+volumes:
+  postgres-data:
